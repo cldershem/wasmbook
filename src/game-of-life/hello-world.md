@@ -61,23 +61,15 @@ WebAssembly. It uses `wasm-bindgen` to interface with JavaScript. It imports the
 alerts a greeting message.
 
 ```rust
-extern crate cfg_if;
-extern crate wasm_bindgen;
-
 mod utils;
 
-use cfg_if::cfg_if;
 use wasm_bindgen::prelude::*;
 
-cfg_if! {
-    // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
-    // allocator.
-    if #[cfg(feature = "wee_alloc")] {
-        extern crate wee_alloc;
-        #[global_allocator]
-        static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-    }
-}
+// When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
+// allocator.
+#[cfg(feature = "wee_alloc")]
+#[global_allocator]
+static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
 extern {
@@ -122,6 +114,7 @@ pkg/
 ├── package.json
 ├── README.md
 ├── wasm_game_of_life_bg.wasm
+├── wasm_game_of_life_bg.d.ts
 ├── wasm_game_of_life.d.ts
 └── wasm_game_of_life.js
 ```
@@ -183,16 +176,15 @@ publish our package to npm.
   "collaborators": [
     "Your Name <your.email@example.com>"
   ],
-  "description": null,
   "version": "0.1.0",
-  "license": null,
-  "repository": null,
   "files": [
     "wasm_game_of_life_bg.wasm",
+    "wasm_game_of_life.js"
     "wasm_game_of_life.d.ts"
   ],
-  "main": "wasm_game_of_life.js",
+  "module": "wasm_game_of_life.js",
   "types": "wasm_game_of_life.d.ts"
+  "sideEffects": "false"
 }
 ```
 
@@ -221,6 +213,7 @@ wasm-game-of-life/www/
 ├── LICENSE-APACHE
 ├── LICENSE-MIT
 ├── package.json
+├── package-lock.json
 ├── README.md
 └── webpack.config.js
 ```
